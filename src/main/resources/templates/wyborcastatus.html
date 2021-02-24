@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <div th:replace="shared/header :: header-css"/>
+    <title>Strona domowa</title>
+</head>
+<body>
+<div th:replace="shared/header :: header('home')"/>
+
+<div id="main" class="container">
+    <H1>Dane kandydata</H1>
+    <span th:if="${wyborca != null }">
+  Imie: <b th:text="${wyborca.imie}"></b><br/>
+
+
+ <span th:if="${wyborca.status != null }">
+    <span th:if="${wyborca.status}">Wniosek Zatwierdzony</span>
+    <span th:unless="${wyborca.status}">Wniosek Odrzucony</span>
+ </span>
+         <span th:if="${wyborca.status == null}">Wniosek w  trakcie</span>
+</span>
+    <span th:unless="${wyborca != null }">
+        Nie masz złozonych wnioskow
+    </span>
+    <a class="btn btn-success" href="/kandydatList.html">Wstecz</a>
+</div>
+<div th:replace="shared/footer :: footer"></div>
+</body>
+</html>

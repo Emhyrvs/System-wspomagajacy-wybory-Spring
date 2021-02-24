@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<html>
+<head>
+    <title>HOME</title>
+    <div th:replace="shared/header :: header-css"/>
+</head>
+<body class="card">
+<div th:replace="shared/header :: header('home')"/>
+<div id="main"  class="container">
+    <li class="nav-item" sec:authorize="hasRole('ROLE_USER')">
+
+      <h1> [[${message}]] </h1>
+    </li>
+    <li class="nav-item" sec:authorize="hasRole('ROLE_USER')">
+        <a class="btn btn-danger" th:href="@{/kandydatedit.html}">Zobacz status kandydata </a>
+        <a class="btn btn-danger" th:href="@{/wyborcastatus.html}">Zobacz status złożenego wniosku dodania do wyborcow </a>
+    </li>
+</div>
+<div th:replace="shared/footer :: footer"></div>
+</body>
+
+</html>
+

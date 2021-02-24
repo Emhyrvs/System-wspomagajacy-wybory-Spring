@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <div th:replace="shared/header :: header-css"/>
+
+    <title>Strona domowa</title>
+</head>
+<body class="card">
+<div th:replace="shared/header :: header('komitetList')"/>
+
+<div th:with="boundMin=${20000},boundMax=${40000}">
+
+    <div id="main" class="card-body">
+
+
+        <H1>LISTA komietow</H1>
+
+
+        <form th:method="POST" th:action="@{komitetList.html}" th:object="${searchCommand}">
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <input th:field="*{phrase}" placeholder="Fraza" class="form-control"
+                           th:classappend="${#fields.hasErrors('phrase')}?'is-invalid'"/>
+                    <div class="error text-danger" th:if="${#fields.hasErrors('phrase')}">
+                        <p th:each="err : ${#fields.errors('phrase')}" th:text="${err}"></p>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+            <div class="row">
+
+                <div class="form-group col-md-8"></div>
+
+                <div class="form-group col-md-2">
+                    <a th:if="${searchCommand.isEmpty() eq false or #fields.hasErrors('*')}" th:href="@{komitetList.html(all)}" class="btn btn-success">
+                        <span class="glyphicon glyphicon-refresh"></span> Pokaż wszystko
+                    </a>
+                </div>
+
+                <div class="form-group col-md-2">
+                    <button type="submit" class="btn btn-info">
+                        <span class="glyphicon glyphicon-search"></span> Wyszukaj
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Imie</th>
+                <th>Nazwisko</th>
+                <th>Pesel</th>
+
+
+                <th sec:authorize="hasRole('ADMIN')">Opcje</th>
+
+            </tr>
+            </thead>
+            <tbody>
+
+
+
+
+
+            <tr th:each="komitet : ${komitetListPage.content}">
+
+                <td>
+
+                    <!--/*@thymesVar id="id" type=""*/-->
+                    <a sec:authorize="isAuthenticated()" th:href="@{/komitetList.html(id=${komitet.id})}">[[${komitet.nazwa}]]</a>
+                    <span sec:authorize="isAnonymous()"> [[${komitet.nazwa}]]</span>
+                </td>
+
+
+                <td sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a class="btn btn-danger" th:href="@{/komitetList.html(did=${komitet.id})}">Usuń</a>
+                    <a class="btn btn-success" th:href="@{/komitetForm.html(id=${komitet.id})}">Edytuj</a>
+                </td>
+
+
+<td>
+    <a class="btn btn-success" th:href="@{/komitetList.html(podpisz=${komitet.id})}">Podpisz listę</a>
+
+</td>
+            </tbody>
+        </table>
+
+        </tr>
+        <security:authorize access="hasRole('ADMIN')">
+            <a class="btn btn-success" href="komitetForm.html">Dodaj Nowy</a>
+        </security:authorize>
+
+
+
+
+    </div>
+</div>
+<security:authorize access="hasRole('ADMIN')">
+
+</security:authorize>
+
+
+<div th:replace="shared/footer :: footer"></div>
+</body>
+</html>

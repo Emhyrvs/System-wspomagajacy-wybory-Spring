@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <div th:replace="shared/header :: header-css"/>
+
+    <title>Strona domowa</title>
+</head>
+<body class="card">
+<div th:replace="shared/header :: header('wyborcaList')"/>
+
+<div th:with="boundMin=${20000},boundMax=${40000}">
+
+    <div id="main" class="card-body">
+
+
+        <H1>LISTA Wyborcow</H1>
+
+
+        <form th:method="POST" th:action="@{wyborcaList.html}" th:object="${searchCommand}">
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <input th:field="*{phrase}" placeholder="Fraza" class="form-control"
+                           th:classappend="${#fields.hasErrors('phrase')}?'is-invalid'"/>
+                    <div class="error text-danger" th:if="${#fields.hasErrors('phrase')}">
+                        <p th:each="err : ${#fields.errors('phrase')}" th:text="${err}"></p>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+            <div class="row">
+
+                <div class="form-group col-md-8"></div>
+
+                <div class="form-group col-md-2">
+                    <a th:if="${searchCommand.isEmpty() eq false or #fields.hasErrors('*')}" th:href="@{wyborcaList.html(all)}" class="btn btn-success">
+                        <span class="glyphicon glyphicon-refresh"></span> Pokaż wszystko
+                    </a>
+                </div>
+
+                <div class="form-group col-md-2">
+                    <button type="submit" class="btn btn-info">
+                        <span class="glyphicon glyphicon-search"></span> Wyszukaj
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Imie</th>
+                <th>Nazwisko</th>
+                <th>Pesel</th>
+
+
+                <th sec:authorize="hasRole('ADMIN')">Opcje</th>
+
+            </tr>
+            </thead>
+            <tbody>
+
+
+
+
+
+            <tr th:each="wyborca : ${wyborcaListPage.content}">
+
+                <td>
+
+                    <!--/*@thymesVar id="id" type=""*/-->
+                    <a sec:authorize="isAuthenticated()" th:href="@{/wyborcaList.html(id=${wyborca.id})}">[[${wyborca.imie}]]</a>
+                    <span sec:authorize="isAnonymous()"> [[${wyborca.imie}]]</span>
+                </td>
+                <td> [[${wyborca.nazwisko}]]</td>
+
+                <td> [[${wyborca.Pesel}]]</td>
+
+
+                <td sec:authorize="hasRole('ROLE_ADMIN')">
+                       <span th:if="${wyborca.status}" >
+                <a class="btn btn-danger" th:href="@{/wyborcaList.html(did=${wyborca.id})}">Usuń</a>
+                <a class="btn btn-success" th:href="@{/wyborcaForm.html(id=${wyborca.id})}">Edytuj</a>
+                    </span>
+
+                    <span th:if="${wyborca.status==null}">
+                <a class="btn btn-danger" th:href="@{/wyborcaList.html(akceptuj=${wyborca.id})}">Akceptuj</a>
+                <a class="btn btn-success" th:href="@{/wyborcaList.html(odrzuc=${wyborca.id})}">Odrzuc</a>
+                </span>
+                </td>
+
+
+
+
+
+            </tbody>
+        </table>
+
+        </tr>
+        <security:authorize access="hasRole('ADMIN')">
+            <a class="btn btn-success" href="wyborcaForm.html">Dodaj Nowy</a>
+        </security:authorize>
+
+
+
+
+    </div>
+</div>
+<security:authorize access="hasRole('ADMIN')">
+
+</security:authorize>
+
+
+<div th:replace="shared/footer :: footer"></div>
+</body>
+</html>

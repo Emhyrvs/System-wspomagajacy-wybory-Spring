@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="shared/header :: header-css"/>
+    <title>Strona domowa</title>
+</head>
+
+<body class="card">
+<div   th:replace="shared/header :: header('home')"/>
+<div id="main" class="container">
+    <div class="row" style="margin-top:20px">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+
+
+            <!--/*@thymesVar id="komitet" type=""*/-->
+            <form th:method="POST" th:object="${komitet}" th:action="@{/komitetForm.html}" >
+
+                <div class="form-group">
+                <label for="nazwa" class="bmd-label-floating">Nazwa:</label>
+                <input id="nazwa" type="text" name="nazwa" th:value="*{nazwa}"
+                       class="form-control" th:classappend="${#fields.hasErrors('nazwa')}?'is-invalid'"
+                       required="true" autofocus="true"/>
+
+                    <button type="submit" class="btn btn-success">Zapisz</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:replace="shared/footer :: footer"></div>
+</body>
+</html>
